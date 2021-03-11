@@ -1,20 +1,17 @@
 import React from 'react';
-import { fireEvent, render } from 'native-testing-library';
+import {Pressable} from 'react-native';
+import {render} from '@testing-library/react-native';
 
-import App from '../App';
+it('toBeDisabled should equal not.toBeEnabled', async () => {
+  const {getByTestId} = await render(
+      <Pressable disabled={true}>
+        <Pressable testID="subject" disabled={false} />
+      </Pressable>,
+  );
+  const subject = getByTestId('subject');
 
-test('it renders a welcome message', () => {
-  const { getByText } = render(<App />);
+  expect(subject).toBeDisabled();
 
-  getByText(/welcome to react native/i);
-  getByText(/to get started/i);
-  getByText(/press cmd\+r to reload/i);
+  // This expectation fails
+  expect(subject).not.toBeEnabled();
 });
-
-test('it can handle events', () => {
-  const spy = jest.fn();
-  const { getByText } = render(<App onPress={spy} />);
-
-  fireEvent.press(getByText(/fire your event/i));
-  expect(spy).toHaveBeenCalledTimes(1);
-})
